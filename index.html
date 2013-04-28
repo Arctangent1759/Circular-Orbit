@@ -3,10 +3,15 @@
       <title>Box2dWeb Demo</title>
    </head>
    <body onload="init();">
-      <canvas id="canvas" width="600" height="400" style="background-color:#333333;" ></canvas>
+      <canvas id="game" width="1000em" height="600em" style="background-color:#333333;" ></canvas>
    </body>
-   <script type="text/javascript" src="lib/Box2dWeb-2.1.a.3.min.js"></script>
+   <script type="text/javascript" src="lib/Box2d/Box2dWeb-2.1.a.3.min.js"></script>
+   <script type="text/javascript" src="lib/JQuery/jquery-1.9.1.min.js"></script>
    <script type="text/javascript">
+      var GAMEDIV = $("#game")[0];
+      var GAMEWIDTH = Number($("#game").css("width").slice(0,-2));
+      var GAMEHEIGHT = Number($("#game").css("height").slice(0,-2));
+      var world;
       
       function init() {
          var   b2Vec2 = Box2D.Common.Math.b2Vec2
@@ -23,7 +28,7 @@
             ,  b2MouseJointDef =  Box2D.Dynamics.Joints.b2MouseJointDef
             ;
          
-         var world = new b2World(
+         world = new b2World(
                new b2Vec2(0, 0)    //no gravity
             ,  true                 //allow sleep
          );
@@ -39,22 +44,22 @@
          //create ground
          bodyDef.type = b2Body.b2_staticBody;
          fixDef.shape = new b2PolygonShape;
-         fixDef.shape.SetAsBox(20, 2);
-         bodyDef.position.Set(10, 400 / 30 + 1.8);
+         fixDef.shape.SetAsBox(GAMEWIDTH, 2);
+         bodyDef.position.Set(10, GAMEHEIGHT / 30 + 1.8);
          world.CreateBody(bodyDef).CreateFixture(fixDef);
          bodyDef.position.Set(10, -1.8);
          world.CreateBody(bodyDef).CreateFixture(fixDef);
          fixDef.shape.SetAsBox(2, 14);
          bodyDef.position.Set(-1.8, 13);
          world.CreateBody(bodyDef).CreateFixture(fixDef);
-         bodyDef.position.Set(21.8, 13);
+         bodyDef.position.Set( GAMEWIDTH / 30 + 1.8, 13);
          world.CreateBody(bodyDef).CreateFixture(fixDef);
          
          
          //create some objects
          bodyDef.type = b2Body.b2_dynamicBody;
-         for(var i = 0; i < 10; ++i) {
-            if(Math.random() > 0.5) {
+         for (var i = 0; i < 10; ++i) {
+            if(Math.random() > 1) {
                fixDef.shape = new b2PolygonShape;
                fixDef.shape.SetAsBox(
                      Math.random() + 0.1 //half width
@@ -72,7 +77,7 @@
          
          //setup debug draw
          var debugDraw = new b2DebugDraw();
-			debugDraw.SetSprite(document.getElementById("canvas").getContext("2d"));
+			debugDraw.SetSprite(GAMEDIV.getContext("2d"));
 			debugDraw.SetDrawScale(30.0);
 			debugDraw.SetFillAlpha(0.5);
 			debugDraw.SetLineThickness(1.0);
@@ -84,7 +89,7 @@
          //mouse
          
          var mouseX, mouseY, mousePVec, isMouseDown, selectedBody, mouseJoint;
-         var canvasPosition = getElementPosition(document.getElementById("canvas"));
+         var canvasPosition = getElementPosition(GAMEDIV);
          
          document.addEventListener("mousedown", function(e) {
             isMouseDown = true;
@@ -182,7 +187,19 @@
             return {x: x, y: y};
          }
 
+         function createWorld(objects){
 
+           //DESTROY ZEE WORLD
+           while (world.GetBodyCount()>1){
+             world.DestroyBody(world.GetBodyList());
+             console.log("penguin");
+           }
+
+           for (var i = 0; i < objects.length; i++){
+             world.CreateBody(objects[i].body).CreateFixture(objects[i].fixture);
+           }
+
+         }
       };
    
    </script>
