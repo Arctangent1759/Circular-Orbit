@@ -1,0 +1,26 @@
+Project Outline
+===============
++ You are a penguin-shaped circle floating around in space
++ Objective: Try to get to the black hole
+
+Gameplay
+---------
++ Player is shot of with a pre-determined initial velocity and angle
+    - possible mod: player can choose angle
++ Click on game elements to control gravitational attraction
+
+
+Game Elements
+-------------
++ Player
+    - a penguin-shaped circle
++ Planets
+    - circles (duh)
+    - tap to toggle gravity
+    - gravitational attraction dies off to 0 at some preset radius
++ Walls
+    - no gravitational attraction
+    - allow for complex maneuvering
++ Black Hole
+    - the goal
+    - sucks you in if you get close enough
