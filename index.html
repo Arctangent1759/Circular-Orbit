@@ -5,7 +5,7 @@
    <body onload="init();">
       <canvas id="canvas" width="600" height="400" style="background-color:#333333;" ></canvas>
    </body>
-   <script type="text/javascript" src="Box2dWeb-2.1.a.3.min.js"></script>
+   <script type="text/javascript" src="lib/Box2dWeb-2.1.a.3.min.js"></script>
    <script type="text/javascript">
       
       function init() {
@@ -24,7 +24,7 @@
             ;
          
          var world = new b2World(
-               new b2Vec2(0, 10)    //gravity
+               new b2Vec2(0, 0)    //no gravity
             ,  true                 //allow sleep
          );
          
@@ -34,6 +34,7 @@
          fixDef.restitution = 0.2;
          
          var bodyDef = new b2BodyDef;
+         
          
          //create ground
          bodyDef.type = b2Body.b2_staticBody;
