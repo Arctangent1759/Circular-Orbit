@@ -179,11 +179,14 @@
             var curr=world.GetBodyList().GetNext();
             for (var i = 1; i < world.GetBodyCount()-1; i++){
               //Compute the vector for the gravity
-              var grav = new Box2D.Common.Math.b2Vec2(curr.GetPosition().x,curr.GetPosition().y);
-              grav.Subtract(player.GetPosition());
-              grav.Multiply(G*1000*player.GetMass()/(grav.Length()*grav.Length()*grav.Length()));
-              player.ApplyForce(grav,player.GetWorldCenter());
-              curr=curr.GetNext();
+              
+              if(curr.hasGravity){
+                  var grav = new Box2D.Common.Math.b2Vec2(curr.GetPosition().x,curr.GetPosition().y);
+                  grav.Subtract(player.GetPosition());
+                  grav.Multiply(G*1000*player.GetMass()/(grav.Length()*grav.Length()*grav.Length()));
+                  player.ApplyForce(grav,player.GetWorldCenter());
+                  curr=curr.GetNext();
+              }
             }
          };
          
@@ -219,18 +222,26 @@
            }
           
            //create ground
+
+           bodyDef.hasGravity = false;
            bodyDef.type = b2Body.b2_staticBody;
            fixDef.shape = new b2PolygonShape;
            fixDef.shape.SetAsBox(GAMEWIDTH, 2);
            bodyDef.position.Set(10, GAMEHEIGHT / 30 + 1.8);
            world.CreateBody(bodyDef).CreateFixture(fixDef);
+           world.GetBodyList().hasGravity = false;
            bodyDef.position.Set(10, -1.8);
            world.CreateBody(bodyDef).CreateFixture(fixDef);
+           world.GetBodyList().hasGravity = false;
            fixDef.shape.SetAsBox(2, 14);
            bodyDef.position.Set(-1.8, 13);
            world.CreateBody(bodyDef).CreateFixture(fixDef);
+           world.GetBodyList().hasGravity = false;
            bodyDef.position.Set( GAMEWIDTH / 30 + 1.8, 13);
            world.CreateBody(bodyDef).CreateFixture(fixDef);
+           world.GetBodyList().hasGravity = false;
+
+           bodyDef.hasGravity = true;
 
            //create planets in object list
            for (var i = 0; i < objects.length; i++){
@@ -239,10 +250,11 @@
              bodyDef.position.x = objects[i].x;
              bodyDef.position.y = objects[i].y;
              world.CreateBody(bodyDef).CreateFixture(fixDef);
+             world.GetBodyList().hasGravity = true;
            }
  
            //create player
-           fixDef.shape = new b2CircleShape(1);
+           fixDef.shape = new b2CircleShape(.75);
            bodyDef.type = b2Body.b2_dynamicBody;
            bodyDef.position.x = 2;
            bodyDef.position.y = 2;
