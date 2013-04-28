@@ -134,9 +134,10 @@
          }
 
          function getBodyCB(fixture) {
-            if(fixture.GetBody().GetType() != b2Body.b2_staticBody) {
+            if(true) {
                if(fixture.GetShape().TestPoint(fixture.GetBody().GetTransform(), mousePVec)) {
                   selectedBody = fixture.GetBody();
+                  console.log("found body");
                   return false;
                }
             }
@@ -151,14 +152,21 @@
             if(isMouseDown && (!mouseJoint)) {
                var body = getBodyAtMouse();
                if(body) {
-                  var md = new b2MouseJointDef();
-                  md.bodyA = world.GetGroundBody();
-                  md.bodyB = body;
-                  md.target.Set(mouseX, mouseY);
-                  md.collideConnected = true;
-                  md.maxForce = 300.0 * body.GetMass();
-                  mouseJoint = world.CreateJoint(md);
-                  body.SetAwake(true);
+                  //console.log(body);
+                  if(body.GetType() == b2Body.b2_staticBody){
+                    body.hasGravity = !body.hasGravity;
+                    console.log("after: " + body.hasGravity);
+                    body.SetAwake(true);
+                  }else{
+                    var md = new b2MouseJointDef();
+                    md.bodyA = world.GetGroundBody();
+                    md.bodyB = body;
+                    md.target.Set(mouseX, mouseY);
+                    md.collideConnected = true;
+                    md.maxForce = 300.0 * body.GetMass();
+                    mouseJoint = world.CreateJoint(md);
+                    body.SetAwake(true);
+                  }
                }
             }
             
@@ -177,10 +185,10 @@
 
             var player=world.GetBodyList();
             var curr=world.GetBodyList().GetNext();
-            for (var i = 1; i < world.GetBodyCount()-1; i++){
+            for (var i = 0; i < world.GetBodyCount(); i++){
               //Compute the vector for the gravity
-              
               if(curr.hasGravity){
+                  //console.log("body " + i +  " has gravity");
                   var grav = new Box2D.Common.Math.b2Vec2(curr.GetPosition().x,curr.GetPosition().y);
                   grav.Subtract(player.GetPosition());
                   grav.Multiply(G*1000*player.GetMass()/(grav.Length()*grav.Length()*grav.Length()));
