@@ -11,6 +11,7 @@
       var GAMEDIV = $("#game")[0];
       var GAMEWIDTH = Number($("#game").css("width").slice(0,-2));
       var GAMEHEIGHT = Number($("#game").css("height").slice(0,-2));
+      var G = 1;
       var world;
       
       function init() {
@@ -145,6 +146,7 @@
          //update
          
          function update() {
+
          
             if(isMouseDown && (!mouseJoint)) {
                var body = getBodyAtMouse();
@@ -172,6 +174,17 @@
             world.Step(1 / 60, 10, 10);
             world.DrawDebugData();
             world.ClearForces();
+
+            var player=world.GetBodyList();
+            var curr=world.GetBodyList().GetNext();
+            for (var i = 1; i < world.GetBodyCount()-1; i++){
+              //Compute the vector for the gravity
+              var grav = new Box2D.Common.Math.b2Vec2(curr.GetPosition().x,curr.GetPosition().y);
+              grav.Subtract(player.GetPosition());
+              grav.Multiply(G*1000*player.GetMass()/(grav.Length()*grav.Length()*grav.Length()));
+              player.ApplyForce(grav,player.GetWorldCenter());
+              curr=curr.GetNext();
+            }
          };
          
          //helpers
@@ -222,6 +235,7 @@
            //create planets in object list
            for (var i = 0; i < objects.length; i++){
              fixDef.shape = new b2CircleShape(objects[i].radius);
+             fixDef.density=1;
              bodyDef.position.x = objects[i].x;
              bodyDef.position.y = objects[i].y;
              world.CreateBody(bodyDef).CreateFixture(fixDef);
@@ -230,10 +244,12 @@
            //create player
            fixDef.shape = new b2CircleShape(1);
            bodyDef.type = b2Body.b2_dynamicBody;
-           bodyDef.x = 5;
-           bodyDef.y = 5;
+           bodyDef.position.x = 2;
+           bodyDef.position.y = 2;
            world.CreateBody(bodyDef).CreateFixture(fixDef);
          }
+          function updateGravity(){
+          }
 
          createWorld(lvl1);
       };
