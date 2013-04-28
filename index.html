@@ -114,6 +114,7 @@
             mouseX = undefined;
             mouseY = undefined;
          }, true);
+
          
          function handleMouseMove(e) {
             mouseX = (e.clientX - canvasPosition.x) / 30;
@@ -134,13 +135,11 @@
          }
 
          function getBodyCB(fixture) {
-            if(fixture.GetBody().GetType() != b2Body.b2_staticBody) {
-               if(fixture.GetShape().TestPoint(fixture.GetBody().GetTransform(), mousePVec)) {
-                  selectedBody = fixture.GetBody();
-                  return false;
-               }
-            }
-            return true;
+             if(fixture.GetShape().TestPoint(fixture.GetBody().GetTransform(), mousePVec)) {
+                selectedBody = fixture.GetBody();
+                return false;
+             }
+            return false;
          }
          
          //update
@@ -151,6 +150,12 @@
             if(isMouseDown && (!mouseJoint)) {
                var body = getBodyAtMouse();
                if(body) {
+                 if (body.GetType()==b2Body.b2_staticBody){
+                   body.GetUserData().hasGravity=!(body.GetUserData().hasGravity);
+                   console.log("===========================================");
+                   console.log(world.GetBodyList().GetNext().GetUserData());
+                   console.log(world.GetBodyList().GetNext().GetNext().GetUserData());
+                 }
                   var md = new b2MouseJointDef();
                   md.bodyA = world.GetGroundBody();
                   md.bodyB = body;
@@ -178,15 +183,14 @@
             var player=world.GetBodyList();
             var curr=world.GetBodyList().GetNext();
             for (var i = 1; i < world.GetBodyCount()-1; i++){
-              //Compute the vector for the gravity
-              
-              if(curr.hasGravity){
+              if(curr.GetUserData().hasGravity){
+                  //Compute the vector for the gravity
                   var grav = new Box2D.Common.Math.b2Vec2(curr.GetPosition().x,curr.GetPosition().y);
                   grav.Subtract(player.GetPosition());
                   grav.Multiply(G*1000*player.GetMass()/(grav.Length()*grav.Length()*grav.Length()));
                   player.ApplyForce(grav,player.GetWorldCenter());
-                  curr=curr.GetNext();
               }
+              curr=curr.GetNext();
             }
          };
          
@@ -223,25 +227,22 @@
           
            //create ground
 
-           bodyDef.hasGravity = false;
            bodyDef.type = b2Body.b2_staticBody;
            fixDef.shape = new b2PolygonShape;
            fixDef.shape.SetAsBox(GAMEWIDTH, 2);
            bodyDef.position.Set(10, GAMEHEIGHT / 30 + 1.8);
            world.CreateBody(bodyDef).CreateFixture(fixDef);
-           world.GetBodyList().hasGravity = false;
+           world.GetBodyList().SetUserData({hasGravity:false});
            bodyDef.position.Set(10, -1.8);
            world.CreateBody(bodyDef).CreateFixture(fixDef);
-           world.GetBodyList().hasGravity = false;
+           world.GetBodyList().SetUserData({hasGravity:false});
            fixDef.shape.SetAsBox(2, 14);
            bodyDef.position.Set(-1.8, 13);
            world.CreateBody(bodyDef).CreateFixture(fixDef);
-           world.GetBodyList().hasGravity = false;
+           world.GetBodyList().SetUserData({hasGravity:false});
            bodyDef.position.Set( GAMEWIDTH / 30 + 1.8, 13);
            world.CreateBody(bodyDef).CreateFixture(fixDef);
-           world.GetBodyList().hasGravity = false;
-
-           bodyDef.hasGravity = true;
+           world.GetBodyList().SetUserData({hasGravity:false});
 
            //create planets in object list
            for (var i = 0; i < objects.length; i++){
@@ -250,9 +251,9 @@
              bodyDef.position.x = objects[i].x;
              bodyDef.position.y = objects[i].y;
              world.CreateBody(bodyDef).CreateFixture(fixDef);
-             world.GetBodyList().hasGravity = true;
+             world.GetBodyList().SetUserData({hasGravity:true});
            }
- 
+
            //create player
            fixDef.shape = new b2CircleShape(.75);
            bodyDef.type = b2Body.b2_dynamicBody;
@@ -260,8 +261,6 @@
            bodyDef.position.y = 2;
            world.CreateBody(bodyDef).CreateFixture(fixDef);
          }
-          function updateGravity(){
-          }
 
          createWorld(lvl1);
       };
