@@ -39,6 +39,8 @@
          fixDef.restitution = 0.2;
          
          var bodyDef = new b2BodyDef;
+
+         
          
          
          //create ground
@@ -57,7 +59,7 @@
          
          
          //create some objects
-         bodyDef.type = b2Body.b2_dynamicBody;
+         bodyDef.type = b2Body.b2_staticBody;
          for (var i = 0; i < 10; ++i) {
             if(Math.random() > 1) {
                fixDef.shape = new b2PolygonShape;
@@ -74,6 +76,14 @@
             bodyDef.position.y = Math.random() * 10;
             world.CreateBody(bodyDef).CreateFixture(fixDef);
          }
+
+         fixDef.shape = new b2CircleShape(1.2);
+         bodyDef.position.x = 10;
+         bodyDef.position.y = 10;
+
+         // levels
+         var lvl1 = [{"radius":2,"gravity":10,"x":20,"y":10},
+                     {"radius":2,"gravity":10,"x":15,"y":17}];
          
          //setup debug draw
          var debugDraw = new b2DebugDraw();
@@ -194,12 +204,38 @@
              world.DestroyBody(world.GetBodyList());
              console.log("penguin");
            }
+          
+           //create ground
+           bodyDef.type = b2Body.b2_staticBody;
+           fixDef.shape = new b2PolygonShape;
+           fixDef.shape.SetAsBox(GAMEWIDTH, 2);
+           bodyDef.position.Set(10, GAMEHEIGHT / 30 + 1.8);
+           world.CreateBody(bodyDef).CreateFixture(fixDef);
+           bodyDef.position.Set(10, -1.8);
+           world.CreateBody(bodyDef).CreateFixture(fixDef);
+           fixDef.shape.SetAsBox(2, 14);
+           bodyDef.position.Set(-1.8, 13);
+           world.CreateBody(bodyDef).CreateFixture(fixDef);
+           bodyDef.position.Set( GAMEWIDTH / 30 + 1.8, 13);
+           world.CreateBody(bodyDef).CreateFixture(fixDef);
 
+           //create planets in object list
            for (var i = 0; i < objects.length; i++){
-             world.CreateBody(objects[i].body).CreateFixture(objects[i].fixture);
+             fixDef.shape = new b2CircleShape(objects[i].radius);
+             bodyDef.position.x = objects[i].x;
+             bodyDef.position.y = objects[i].y;
+             world.CreateBody(bodyDef).CreateFixture(fixDef);
            }
-
+ 
+           //create player
+           fixDef.shape = new b2CircleShape(1);
+           bodyDef.type = b2Body.b2_dynamicBody;
+           bodyDef.x = 5;
+           bodyDef.y = 5;
+           world.CreateBody(bodyDef).CreateFixture(fixDef);
          }
+
+         createWorld(lvl1);
       };
    
    </script>

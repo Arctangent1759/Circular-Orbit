@@ -24,3 +24,4 @@ Game Elements
 + Black Hole
     - the goal
     - sucks you in if you get close enough
++ Intergalactic Semi-transparent Brocolli
