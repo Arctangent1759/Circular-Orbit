@@ -211,7 +211,7 @@
          
             world.Step(1 / 60, 10, 10);
             //world.DrawDebugData();
-            draw();
+            draw(); //comment this out and uncomment the line above to see the debugging version
             world.ClearForces();
 
             var player=world.GetBodyList();
@@ -320,7 +320,8 @@
         context.clearRect(0, 0, GAMEWIDTH, GAMEHEIGHT);
         var background = new Image();
         background.src = "http://www.wideawakeinwonderland.com/wp-content/uploads/2010/06/starfield_lrg.jpg";
-        //context.drawImage(background,0,0);
+        //uncomment the following for background image
+        //context.drawImage(background,0,0);   
         var node = world.GetBodyList();
         while (node) {
           var b = node;
