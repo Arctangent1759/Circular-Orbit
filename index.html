@@ -159,9 +159,6 @@
                if(body) {
                  if (body.GetType()==b2Body.b2_staticBody){
                    body.GetUserData().hasGravity=!(body.GetUserData().hasGravity);
-                   console.log("===========================================");
-                   console.log(world.GetBodyList().GetNext().GetUserData());
-                   console.log(world.GetBodyList().GetNext().GetNext().GetUserData());
                  }
                   var md = new b2MouseJointDef();
                   md.bodyA = world.GetGroundBody();
@@ -194,7 +191,7 @@
                   //Compute the vector for the gravity
                   var grav = new Box2D.Common.Math.b2Vec2(curr.GetPosition().x,curr.GetPosition().y);
                   grav.Subtract(player.GetPosition());
-                  grav.Multiply(G*1000*player.GetMass()/(grav.Length()*grav.Length()*grav.Length()));
+                  grav.Multiply(G*curr.GetUserData().mass*player.GetMass()/(grav.Length()*grav.Length()*grav.Length()));
                   player.ApplyForce(grav,player.GetWorldCenter());
               }
               curr=curr.GetNext();
@@ -258,7 +255,7 @@
              bodyDef.position.x = objects[i].x;
              bodyDef.position.y = objects[i].y;
              world.CreateBody(bodyDef).CreateFixture(fixDef);
-             world.GetBodyList().SetUserData({hasGravity:true});
+             world.GetBodyList().SetUserData({hasGravity:true, mass:objects[i].mass});
            }
 
            //create player
