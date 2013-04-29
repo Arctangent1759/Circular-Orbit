@@ -317,7 +317,10 @@
       
       function draw(){
        
-        context.clearRect(0, 0, GAMEWIDTH, GAMEHEIGHT); 
+        context.clearRect(0, 0, GAMEWIDTH, GAMEHEIGHT);
+        var background = new Image();
+        background.src = "http://www.wideawakeinwonderland.com/wp-content/uploads/2010/06/starfield_lrg.jpg";
+        //context.drawImage(background,0,0);
         var node = world.GetBodyList();
         while (node) {
           var b = node;
@@ -338,13 +341,17 @@
           //draw circles
           if (shapeType == Box2D.Collision.Shapes.b2Shape.e_circleShape) {
             context.strokeStyle = "#000000";
-            context.fillStyle = "#FFFFFF";
+            var grd = context.createRadialGradient(position.x*30,position.y*30,0,position.x*30,position.y*30,shape.GetRadius()*30); // gradient for circular objects
+            grd.addColorStop(0,"#CC0000"); //inner color
+            grd.addColorStop(1,"#000000"); //outer color
+
+            context.fillStyle = grd;
             context.beginPath();
             context.arc(position.x*30,flipy*30,shape.GetRadius()*30,0,Math.PI*2,true);
             context.closePath();
             context.stroke();
             context.fill();
-          }else if (shapeType == Box2D.Collision.Shapes.b2Shape.e_polygonShape) {
+          }else if (shapeType == Box2D.Collision.Shapes.b2Shape.e_polygonShape) { //draw rectangles
             var vert = shape.GetVertices();
             context.beginPath();
 
@@ -357,10 +364,14 @@
               var v = b2Math.AddVV(position, b2Math.MulMV(b.m_xf.R, vert[i]));
               context.lineTo(v.x*30, v.y*30);
             }
+
+            var grd2 = context.createLinearGradient(0,0,position.x*30, position.y*30); //could use for rectangles, maybe not though
+            grd2.addColorStop(0, "#FFFFFF");
+            grd2.addColorStop(1, "#000000");
             context.lineTo(tV.x*30, tV.y*30);
             context.closePath();
-            context.strokeStyle = "#CCCCCC";
-            context.fillStyle = "#FFFFFF";
+            context.strokeStyle = "#FFFFFF";
+            context.fillStyle = "#000000";
             context.stroke();
             context.fill();
 
