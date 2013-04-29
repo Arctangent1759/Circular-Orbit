@@ -3,7 +3,7 @@
       <title>Circular Orbit</title>
    </head>
    <body onload="init();">
-      <canvas id="game" width="1000em" height="600em" style="background-color:#333333;" ></canvas>
+      <canvas id="game" width="1000em" height="600em" style="background-color:#000000;" ></canvas>
    </body>
    <script type="text/javascript" src="lib/Box2d/Box2dWeb-2.1.a.3.min.js"></script>
    <script type="text/javascript" src="lib/JQuery/jquery-1.9.1.min.js"></script>
@@ -11,6 +11,7 @@
       var GAMEDIV = $("#game")[0];
       var GAMEWIDTH = Number($("#game").css("width").slice(0,-2));
       var GAMEHEIGHT = Number($("#game").css("height").slice(0,-2));
+      var context = GAMEDIV.getContext("2d");
       var G = 1;
       var world;
       var g_player;
@@ -209,7 +210,8 @@
             }
          
             world.Step(1 / 60, 10, 10);
-            world.DrawDebugData();
+            //world.DrawDebugData();
+            draw();
             world.ClearForces();
 
             var player=world.GetBodyList();
@@ -312,6 +314,61 @@
 
          createWorld(levels[0]);
       };
+      
+      function draw(){
+       
+        context.clearRect(0, 0, GAMEWIDTH, GAMEHEIGHT); 
+        var node = world.GetBodyList();
+        while (node) {
+          var b = node;
+          node = node.GetNext();
+          var position = b.GetPosition();
+          
+
+
+          // Canvas Y coordinates start at opposite location, so we flip
+          var flipy = position.y//GAMEHEIGHT - position.y;
+          var fl = b.GetFixtureList();
+          if (!fl) {
+            continue;
+          }
+          var shape = fl.GetShape();
+          var shapeType = shape.GetType();       
+
+          //draw circles
+          if (shapeType == Box2D.Collision.Shapes.b2Shape.e_circleShape) {
+            context.strokeStyle = "#000000";
+            context.fillStyle = "#FFFFFF";
+            context.beginPath();
+            context.arc(position.x*30,flipy*30,shape.GetRadius()*30,0,Math.PI*2,true);
+            context.closePath();
+            context.stroke();
+            context.fill();
+          }else if (shapeType == Box2D.Collision.Shapes.b2Shape.e_polygonShape) {
+            var vert = shape.GetVertices();
+            context.beginPath();
+
+            // Handle the possible rotation of the polygon and draw it
+            b2Math = Box2D.Common.Math.b2Math;
+            b2Math.MulMV(b.m_xf.R,vert[0]);
+            var tV = b2Math.AddVV(position, b2Math.MulMV(b.m_xf.R, vert[0]));
+            context.moveTo(tV.x*30, tV.y*30);
+            for (var i = 0; i < vert.length; i++) {
+              var v = b2Math.AddVV(position, b2Math.MulMV(b.m_xf.R, vert[i]));
+              context.lineTo(v.x*30, v.y*30);
+            }
+            context.lineTo(tV.x*30, tV.y*30);
+            context.closePath();
+            context.strokeStyle = "#CCCCCC";
+            context.fillStyle = "#FFFFFF";
+            context.stroke();
+            context.fill();
+
+          }
+      
+       } 
+
+      }
    
    </script>
    
