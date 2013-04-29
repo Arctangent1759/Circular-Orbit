@@ -1,4 +1,4 @@
-<html>
+<.x=html>
    <head>
       <title>Box2dWeb Demo</title>
    </head>
@@ -13,6 +13,9 @@
       var GAMEHEIGHT = Number($("#game").css("height").slice(0,-2));
       var G = 1;
       var world;
+      var g_player;
+      var g_goal;
+      var currlevel=0;
       
       function init() {
          var   b2Vec2 = Box2D.Common.Math.b2Vec2
@@ -36,8 +39,9 @@
          
          
          // levels
-         var lvl1 = [{"radius":2, "mass":1000, "isGoal":false, "x":20, "y":10},
-                     {"radius":2, "mass":1000, "isGoal":true, "x":30,"y":17}];
+         var levels=[];
+         levels[0] = {init_velocity:new b2Vec2(10,0),objects:[{objtype:"circle", radius:2, mass:1000, isGoal:false, x:20, y:10},
+           {objtype:"circle", radius:2, mass:10, isGoal:true, x:30,y:17},{objtype:"wall", length:10, angle:90, mass:10, isGoal:false, x:24,y:15}]};
          
          
          
@@ -152,12 +156,19 @@
          //update
          
          function update() {
+            //Check for victory
+           for (var contact=world.GetContactList(); contact != null; contact=contact.GetNext()){
+             if ((contact.GetFixtureA()==g_player.GetFixtureList() &&  contact.GetFixtureB()==g_goal.GetFixtureList()) || (contact.GetFixtureB()==g_player.GetFixtureList() &&  contact.GetFixtureA()==g_goal.GetFixtureList())){
+                 alert("You win!");
+                 createWorld(levels[currlevel+1<levels.length?currlevel+1:0]);
+               }
+           }
 
          
             if(isMouseDown && (!mouseJoint)) {
                var body = getBodyAtMouse();
                if(body) {
-                 if (body.GetType()==b2Body.b2_staticBody){
+                 if (body.GetType()==b2Body.b2_staticBody && !body.GetUserData().isGoal && body.GetUserData().objtype=="circle"){
                    body.GetUserData().hasGravity=!(body.GetUserData().hasGravity);
                  }
                   var md = new b2MouseJointDef();
@@ -221,7 +232,9 @@
             return {x: x, y: y};
          }
 
-         function createWorld(objects){
+         function createWorld(level){
+           var objects=level.objects;
+             
 
            //DESTROY ZEE WORLD
            while (world.GetBodyCount()>1){
@@ -250,12 +263,23 @@
 
            //create planets in object list
            for (var i = 0; i < objects.length; i++){
-             fixDef.shape = new b2CircleShape(objects[i].radius);
-             fixDef.density=1;
+             if (objects[i].objtype=="circle"){
+               fixDef.shape = new b2CircleShape(objects[i].radius);
+             }else if (objects[i].objtype=="wall"){
+               fixDef.shape = new b2PolygonShape;
+               fixDef.shape.SetAsBox(objects[i].length,.1);
+             }
              bodyDef.position.x = objects[i].x;
              bodyDef.position.y = objects[i].y;
              world.CreateBody(bodyDef).CreateFixture(fixDef);
-             world.GetBodyList().SetUserData({hasGravity:true, mass:objects[i].mass});
+             world.GetBodyList().SetUserData({hasGravity:objects[i].isGoal?true:false, mass:objects[i].mass,isGoal:objects[i].isGoal,objtype:objects[i].objtype});
+             if (objects[i].isGoal){
+               g_goal=world.GetBodyList();//Pointless Comment
+             }
+             if (objects[i].objtype=="wall"){
+
+               world.GetBodyList().SetAngle(objects[i].angle*Math.PI/180.0);
+             }
            }
 
            //create player
@@ -264,9 +288,12 @@
            bodyDef.position.x = 2;
            bodyDef.position.y = 2;
            world.CreateBody(bodyDef).CreateFixture(fixDef);
+           g_player=world.GetBodyList();
+           g_player.GetLinearVelocity().x=level.init_velocity.x;
+           g_player.GetLinearVelocity().y=level.init_velocity.y;
          }
 
-         createWorld(lvl1);
+         createWorld(levels[0]);
       };
    
    </script>
