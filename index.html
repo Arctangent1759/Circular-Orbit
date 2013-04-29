@@ -40,8 +40,8 @@
          
          // levels
          var levels=[];
-         levels[0] = {init_velocity:new b2Vec2(10,0),objects:[{objtype:"circle", radius:2, mass:1000, isGoal:false, x:20, y:10},
-           {objtype:"circle", radius:2, mass:10, isGoal:true, x:30,y:17},{objtype:"wall", length:10, angle:90, mass:10, isGoal:false, x:24,y:15}]};
+         levels[0] = {init_velocity:new b2Vec2(30,0),init_x:0,init_y:15,objects:[{objtype:"circle", radius:2, mass:10000, isGoal:false, x:20, y:10},
+           {objtype:"circle", radius:2, mass:0, isGoal:true, x:30,y:17},{objtype:"wall", length:10, angle:90, mass:10, isGoal:false, x:24,y:15}]};
          
          
          
@@ -283,10 +283,10 @@
            }
 
            //create player
-           fixDef.shape = new b2CircleShape(.75);
+           fixDef.shape = new b2CircleShape(.25);
            bodyDef.type = b2Body.b2_dynamicBody;
-           bodyDef.position.x = 2;
-           bodyDef.position.y = 2;
+           bodyDef.position.x = level.init_x;
+           bodyDef.position.y = level.init_y;
            world.CreateBody(bodyDef).CreateFixture(fixDef);
            g_player=world.GetBodyList();
            g_player.GetLinearVelocity().x=level.init_velocity.x;
