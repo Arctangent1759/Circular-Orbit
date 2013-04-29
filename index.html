@@ -341,12 +341,14 @@
 
           //draw circles
           if (shapeType == Box2D.Collision.Shapes.b2Shape.e_circleShape) {
-            context.strokeStyle = "#000000";
+            context.lineWidth = 5;
+            context.strokeStyle = "#FFFFFF";
             var grd = context.createRadialGradient(position.x*30,position.y*30,0,position.x*30,position.y*30,shape.GetRadius()*30); // gradient for circular objects
             grd.addColorStop(0,"#CC0000"); //inner color
             grd.addColorStop(1,"#000000"); //outer color
 
-            context.fillStyle = grd;
+            //context.fillStyle = grd;
+            context.fillStyle = "#000000";
             context.beginPath();
             context.arc(position.x*30,flipy*30,shape.GetRadius()*30,0,Math.PI*2,true);
             context.closePath();
