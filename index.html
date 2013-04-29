@@ -12,7 +12,7 @@
       var GAMEWIDTH = Number($("#game").css("width").slice(0,-2));
       var GAMEHEIGHT = Number($("#game").css("height").slice(0,-2));
       var context = GAMEDIV.getContext("2d");
-      var G = 1;
+      var G = 5;
       var world;
       var g_player;
       var g_goal;
@@ -41,18 +41,18 @@
          
          // levels
          var levels=[];
-         levels[0] = {init_velocity:new b2Vec2(10,0),init_x:2,init_y:2,objects:[{objtype:"circle", radius:1, mass:500, isGoal:false, x:20, y:10},
+         levels[0] = {init_velocity:new b2Vec2(20,0),init_x:2,init_y:2,objects:[{objtype:"circle", radius:1, mass:500, isGoal:false, x:20, y:10},
            {objtype:"circle", radius:1, mass:0, isGoal:true, x:30,y:17},
            {objtype:"wall", length:10, angle:90, mass:10, isGoal:false, x:24,y:15}]};
 
-         levels[1] = {init_velocity:new b2Vec2(5,0), init_x:1, init_y:17, objects:[{objtype:"circle", radius:1, mass: 200, isGoal:false, x:5, y:15},
+         levels[1] = {init_velocity:new b2Vec2(20,0), init_x:1, init_y:17, objects:[{objtype:"circle", radius:1, mass: 200, isGoal:false, x:5, y:15},
            {objtype:"circle", radius:1, mass:0, isGoal:true, x:30, y:17}, 
            {objtype:"wall", length:10, angle:90, mass:10, isGoal:false, x:17, y:15}]};
          
-         levels[2] = {init_velocity:new b2Vec2(5,-1), init_x:0, init_y:17, objects:[{objtype:"circle", radius:1, mass:200, isGoal:false, x:17, y:10},
+         levels[2] = {init_velocity:new b2Vec2(15,-3), init_x:0, init_y:17, objects:[{objtype:"circle", radius:1, mass:200, isGoal:false, x:17, y:10},
            {objtype:"circle", radius:1, mass:0, isGoal:true, x:30, y:17}]};
 
-         levels[3] = {init_velocity:new b2Vec2(5,0), init_x:1, init_y:2, objects:[{objtype:"circle", radius:1, mass:200, isGoal:false, x:2, y:5},
+         levels[3] = {init_velocity:new b2Vec2(15,0), init_x:1, init_y:2, objects:[{objtype:"circle", radius:1, mass:200, isGoal:false, x:2, y:5},
            {objtype:"circle", radius:1, mass:-500, isGoal:false, x:2, y:15},
            {objtype:"circle", radius:1, mass:-500, isGoal:false, x:29, y:18},
            {objtype:"circle", radius:2, mass:0, isGoal:true, x:29, y:3},
@@ -339,12 +339,28 @@
             if (shapeType == Box2D.Collision.Shapes.b2Shape.e_circleShape) {
               context.lineWidth = 5;
               context.strokeStyle = "#FFFFFF";
-              var grd = context.createRadialGradient(position.x*30,position.y*30,0,position.x*30,position.y*30,shape.GetRadius()*30); // gradient for circular objects
-              grd.addColorStop(0,"#CC0000"); //inner color
-              grd.addColorStop(1,"#000000"); //outer color
+              var grd0 = context.createRadialGradient(position.x*30,position.y*30,0,position.x*30,position.y*30,shape.GetRadius()*30); // gradient for circular objects
+              grd0.addColorStop(0,"#FFFFFF"); //inner color
+              grd0.addColorStop(1,"#000000"); //outer color
+              var grd1 = context.createRadialGradient(position.x*30,position.y*30,0,position.x*30,position.y*30,shape.GetRadius()*30); // gradient for circular objects
+              grd1.addColorStop(0,"#FF0000"); //inner color
+              grd1.addColorStop(1,"#000000"); //outer color
+              var grd2 = context.createRadialGradient(position.x*30,position.y*30,0,position.x*30,position.y*30,shape.GetRadius()*30); // gradient for circular objects
+              grd2.addColorStop(0,"#0000FF"); //inner color
+              grd2.addColorStop(1,"#000000"); //outer color
 
-              //context.fillStyle = grd;
-              context.fillStyle = "#000000";
+              if (b.GetUserData() && b.GetUserData().isGoal){
+                  context.fillStyle = grd0;
+              }
+              else if (b.GetUserData() && b.GetUserData().hasGravity){
+                if (b.GetUserData().mass>0){
+                  context.fillStyle = grd1;
+                }else{
+                  context.fillStyle = grd2;
+                }
+              }else{
+                context.fillStyle = "#000000";
+              }
               context.beginPath();
               context.arc(position.x*30,flipy*30,shape.GetRadius()*30,0,Math.PI*2,true);
               context.closePath();
