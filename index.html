@@ -17,6 +17,10 @@
       var g_player;
       var g_goal;
       var currlevel=0;
+      var levels=[];
+      var isTitleScreen=true;
+      var title = new Image();
+      title.src = 'title.png';
       
       function init() {
          var   b2Vec2 = Box2D.Common.Math.b2Vec2
@@ -40,7 +44,6 @@
          
          
          // levels
-         var levels=[];
          levels[0] = {init_velocity:new b2Vec2(20,0),init_x:2,init_y:2,objects:[{objtype:"circle", radius:1, mass:500, isGoal:false, x:20, y:10},
            {objtype:"circle", radius:1, mass:0, isGoal:true, x:30,y:17},
            {objtype:"wall", length:10, angle:90, mass:10, isGoal:false, x:24,y:15}]};
@@ -131,13 +134,23 @@
             isMouseDown = true;
             handleMouseMove(e);
             document.addEventListener("mousemove", handleMouseMove, true);
+
+  
          }, true);
          
-         document.addEventListener("mouseup", function() {
+         document.addEventListener("mouseup", function(e) {
+           if (isTitleScreen){
+              isTitleScreen=false;
+              createWorld(levels[currlevel]);
+           }
+            if (e.clientX>10 && e.clientX<210 && e.clientY >GAMEHEIGHT-50 && e.clientY < GAMEHEIGHT-10){
+              createWorld(levels[currlevel]);
+            }
             document.removeEventListener("mousemove", handleMouseMove, true);
             isMouseDown = false;
             mouseX = undefined;
             mouseY = undefined;
+
          }, true);
 
          
@@ -179,6 +192,9 @@
                  alert("You win!");
                  createWorld(levels[currlevel+1<levels.length?currlevel+1:0]);
                  currlevel += 1;
+                 if (currlevel>=levels.length){
+                   currlevel=0;
+                 }
                }
            }
 
@@ -201,7 +217,7 @@
             }
             
             if(mouseJoint) {
-               if(isMouseDown) {
+             if(isMouseDown) {
                   mouseJoint.SetTarget(new b2Vec2(mouseX, mouseY));
                } else {
                   world.DestroyJoint(mouseJoint);
@@ -314,6 +330,11 @@
 
         function draw(){
           context.clearRect(0, 0, GAMEWIDTH, GAMEHEIGHT);
+          if (isTitleScreen){
+            context.drawImage(title,0,0);
+            return;
+          }
+
           var background = new Image();
           background.src = "http://www.wideawakeinwonderland.com/wp-content/uploads/2010/06/starfield_lrg.jpg";
           //uncomment the following for background image
@@ -390,13 +411,19 @@
               context.stroke();
               context.fill();
 
+              context.fillStyle=grd2;
+              context.fillRect(10,GAMEHEIGHT-50,200,40);
+              context.fillStyle = "#FFFFFF";
+              context.font="30px Tahoma"
+              context.fillText("Reset",60,GAMEHEIGHT-20);
+
             }
         
          } 
 
       }
 
-         createWorld(levels[0]);
+       //createWorld(levels[0]);
       };
       
          
