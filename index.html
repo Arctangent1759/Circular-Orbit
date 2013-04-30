@@ -415,8 +415,10 @@
               context.stroke();
               context.fill();
 
-              context.fillStyle=grd2;
+              context.fillStyle = "#000000";
+              context.lineWidth = 1;
               context.fillRect(10,GAMEHEIGHT-50,200,40);
+              context.strokeRect(10,GAMEHEIGHT-50,200,40);
               context.fillStyle = "#FFFFFF";
               context.font="30px Sans Serif"
               context.fillText("Reset",60,GAMEHEIGHT-20);
