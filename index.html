@@ -371,15 +371,19 @@
               grd2.addColorStop(1,"#000000"); //outer color
 
               if (b.GetUserData() && b.GetUserData().isGoal){
-                  context.fillStyle = grd0;
+                  context.strokeStyle = "#FFFFFF";
+                  context.fillStyle = "#FFFFFF";
               }
               else if (b.GetUserData() && b.GetUserData().hasGravity){
                 if (b.GetUserData().mass>0){
-                  context.fillStyle = grd1;
+                  context.strokeStyle = "#FF0000";
+                  context.fillStyle = "#FF0000";
                 }else{
-                  context.fillStyle = grd2;
+                  context.strokeStyle = "#0000FF";
+                  context.fillStyle = "#0000FF";
                 }
               }else{
+                context.strokeStyle = "#FFFFFF";
                 context.fillStyle = "#000000";
               }
               context.beginPath();
@@ -414,7 +418,7 @@
               context.fillStyle=grd2;
               context.fillRect(10,GAMEHEIGHT-50,200,40);
               context.fillStyle = "#FFFFFF";
-              context.font="30px Tahoma"
+              context.font="30px Sans Serif"
               context.fillText("Reset",60,GAMEHEIGHT-20);
 
             }
