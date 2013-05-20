@@ -109,8 +109,9 @@ function init() {
    document.addEventListener("mouseup", function(e) {
      if (isTitleScreen){
         isTitleScreen=false;
-        //createWorld(levels[currlevel]);
-        createWorld(levels[4]);
+        createWorld(levels[currlevel]);
+        //createWorld(levels[4]);
+        //uncomment above line to debug a specific level
      }
       if (e.clientX>10 && e.clientX<210 && e.clientY >GAMEHEIGHT-50 && e.clientY < GAMEHEIGHT-10){
         createWorld(levels[currlevel]);
