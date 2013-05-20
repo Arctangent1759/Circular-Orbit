@@ -266,7 +266,7 @@ function init() {
 
      //create planets in object list
      for (var i = 0; i < objects.length; i++){
-       if (objects[i].objtype=="circle"){
+       if (objects[i].objtype=="circle" || objects[i].objtype=="goal"){
          fixDef.shape = new b2CircleShape(objects[i].radius);
        }else if (objects[i].objtype=="wall"){
          fixDef.shape = new b2PolygonShape;
@@ -275,8 +275,8 @@ function init() {
        bodyDef.position.x = objects[i].x;
        bodyDef.position.y = objects[i].y;
        world.CreateBody(bodyDef).CreateFixture(fixDef);
-       world.GetBodyList().SetUserData({hasGravity:objects[i].isGoal?true:false, mass:objects[i].mass,isGoal:objects[i].isGoal,objtype:objects[i].objtype});
-       if (objects[i].isGoal){
+       world.GetBodyList().SetUserData({hasGravity:objects[i].objtype=="goal", mass:objects[i].mass,isGoal:objects[i].objtype=="goal",objtype:objects[i].objtype});
+       if (objects[i].objtype=="goal"){
          g_goal=world.GetBodyList();//Pointless Comment
        }
        if (objects[i].objtype=="wall"){
