@@ -36,7 +36,7 @@ function init() {
    var fixDef = new b2FixtureDef;
    fixDef.density = 1.0;
    fixDef.friction = 0;
-   fixDef.restitution = 1;
+   fixDef.restitution = .8;
    
    var bodyDef = new b2BodyDef;
 
@@ -109,7 +109,8 @@ function init() {
    document.addEventListener("mouseup", function(e) {
      if (isTitleScreen){
         isTitleScreen=false;
-        createWorld(levels[currlevel]);
+        //createWorld(levels[currlevel]);
+        createWorld(levels[4]);
      }
       if (e.clientX>10 && e.clientX<210 && e.clientY >GAMEHEIGHT-50 && e.clientY < GAMEHEIGHT-10){
         createWorld(levels[currlevel]);
@@ -355,7 +356,7 @@ function init() {
           context.fillStyle = "#000000";
         }
         context.beginPath();
-        context.arc(position.x*30,flipy*30,shape.GetRadius()*30,0,Math.PI*2,true);
+        context.arc(position.x*30,flipy*30,shape.GetRadius()*30 - 2,0,Math.PI*2,true);
         context.closePath();
         context.stroke();
         context.fill();
