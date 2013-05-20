@@ -1,5 +1,5 @@
 var levels = [] ;
-var b2Vec2 = Box2D.Common.Math.b2Vec2 
+var b2Vec2 = Box2D.Common.Math.b2Vec2; 
 
 levels[0] = {init_velocity:new b2Vec2(20,0),init_x:2,init_y:2,objects:[{objtype:"circle", radius:1, mass:500, isGoal:false, x:20, y:10},
  {objtype:"circle", radius:1, mass:0, isGoal:true, x:30,y:17},
