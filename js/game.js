@@ -1,4 +1,3 @@
-
 var GAMEDIV = $("#game")[0];
 var GAMEWIDTH = Number($("#game").css("width").slice(0,-2));
 var GAMEHEIGHT = Number($("#game").css("height").slice(0,-2));
@@ -8,24 +7,23 @@ var world;
 var g_player;
 var g_goal;
 var currlevel=0;
-//var levels=[];
 var isTitleScreen=true;
 var title = new Image();
 title.src = 'title.png';
 
 function init() {
    var   b2Vec2 = Box2D.Common.Math.b2Vec2
-      ,  b2AABB = Box2D.Collision.b2AABB
-    , b2BodyDef = Box2D.Dynamics.b2BodyDef
-    , b2Body = Box2D.Dynamics.b2Body
-    , b2FixtureDef = Box2D.Dynamics.b2FixtureDef
-    , b2Fixture = Box2D.Dynamics.b2Fixture
-    , b2World = Box2D.Dynamics.b2World
-    , b2MassData = Box2D.Collision.Shapes.b2MassData
-    , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
-    , b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
-    , b2DebugDraw = Box2D.Dynamics.b2DebugDraw
-      ,  b2MouseJointDef =  Box2D.Dynamics.Joints.b2MouseJointDef
+      , b2AABB = Box2D.Collision.b2AABB
+      , b2BodyDef = Box2D.Dynamics.b2BodyDef
+      , b2Body = Box2D.Dynamics.b2Body
+      , b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+      , b2Fixture = Box2D.Dynamics.b2Fixture
+      , b2World = Box2D.Dynamics.b2World
+      , b2MassData = Box2D.Collision.Shapes.b2MassData
+      , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+      , b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
+      , b2DebugDraw = Box2D.Dynamics.b2DebugDraw
+      , b2MouseJointDef =  Box2D.Dynamics.Joints.b2MouseJointDef
       ;
    
    world = new b2World(
@@ -34,29 +32,7 @@ function init() {
    );
    
    
-   // levels
-   /**
-   levels[0] = {init_velocity:new b2Vec2(20,0),init_x:2,init_y:2,objects:[{objtype:"circle", radius:1, mass:500, isGoal:false, x:20, y:10},
-     {objtype:"circle", radius:1, mass:0, isGoal:true, x:30,y:17},
-     {objtype:"wall", length:10, angle:90, mass:10, isGoal:false, x:24,y:15}]};
-
-   levels[1] = {init_velocity:new b2Vec2(20,0), init_x:1, init_y:17, objects:[{objtype:"circle", radius:1, mass: 200, isGoal:false, x:5, y:15},
-     {objtype:"circle", radius:1, mass:0, isGoal:true, x:30, y:17}, 
-     {objtype:"wall", length:10, angle:90, mass:10, isGoal:false, x:17, y:15}]};
-   
-   levels[2] = {init_velocity:new b2Vec2(15,-3), init_x:0, init_y:17, objects:[{objtype:"circle", radius:1, mass:200, isGoal:false, x:17, y:10},
-     {objtype:"circle", radius:1, mass:0, isGoal:true, x:30, y:17}]};
-
-   levels[3] = {init_velocity:new b2Vec2(15,0), init_x:1, init_y:2, objects:[{objtype:"circle", radius:1, mass:200, isGoal:false, x:2, y:5},
-     {objtype:"circle", radius:1, mass:-500, isGoal:false, x:2, y:15},
-     {objtype:"circle", radius:1, mass:-500, isGoal:false, x:29, y:18},
-     {objtype:"circle", radius:2, mass:0, isGoal:true, x:29, y:3},
-     {objtype:"wall", length:10, angle:90, mass:10, isGoal:false, x:8, y:2}, 
-     {objtype:"wall", length:1.7, angle:90, mass:10, isGoal:false, x:8, y:18.4},
-     {objtype:"wall", length:10, angle:90, mass:10, isGoal:false, x:25, y:2},
-     {objtype:"wall", length:8.5, angle:0, mass:10, isGoal:false, x:16.5, y:12}]};
-   **/
-   
+  
    var fixDef = new b2FixtureDef;
    fixDef.density = 1.0;
    fixDef.friction = 0;
@@ -108,12 +84,12 @@ function init() {
   
    //setup debug draw
    var debugDraw = new b2DebugDraw();
-debugDraw.SetSprite(GAMEDIV.getContext("2d"));
-debugDraw.SetDrawScale(30.0);
-debugDraw.SetFillAlpha(0.5);
-debugDraw.SetLineThickness(1.0);
-debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
-world.SetDebugDraw(debugDraw);
+   debugDraw.SetSprite(GAMEDIV.getContext("2d"));
+   debugDraw.SetDrawScale(30.0);
+   debugDraw.SetFillAlpha(0.5);
+   debugDraw.SetLineThickness(1.0);
+   debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+   world.SetDebugDraw(debugDraw);
    
    window.setInterval(update, 1000 / 60);
    
