@@ -270,8 +270,8 @@ function init() {
      for (var i = 0; i < objects.length; i++){
        if (objects[i].objtype=="circle" || objects[i].objtype=="goal"){
          fixDef.shape = new b2CircleShape(objects[i].radius);
-       }else if (objects[i].objtype=="wall")
-         fixDef.restitution = 1{
+       }else if (objects[i].objtype=="wall"){
+         fixDef.restitution = 1;
          fixDef.shape = new b2PolygonShape;
          fixDef.shape.SetAsBox(objects[i].length,.1);
        }
