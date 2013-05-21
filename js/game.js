@@ -268,6 +268,7 @@ function init() {
 
      //create planets in object list
      for (var i = 0; i < objects.length; i++){
+       fixDef.restitution = .8;
        if (objects[i].objtype=="circle" || objects[i].objtype=="goal"){
          fixDef.shape = new b2CircleShape(objects[i].radius);
        }else if (objects[i].objtype=="wall"){
@@ -275,7 +276,6 @@ function init() {
          fixDef.shape = new b2PolygonShape;
          fixDef.shape.SetAsBox(objects[i].length,.1);
        }
-       fixDef.restitution = .8;
        bodyDef.position.x = objects[i].x;
        bodyDef.position.y = objects[i].y;
        world.CreateBody(bodyDef).CreateFixture(fixDef);
