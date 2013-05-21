@@ -21,7 +21,7 @@ levels[3] = {init_velocity:new b2Vec2(15,0), init_x:1, init_y:2, objects:[{objty
  {objtype:"wall", length:10, angle:90, mass:10,  x:25, y:2},
  {objtype:"wall", length:8.5, angle:0, mass:10,  x:16.5, y:12}]};
 
-levels[4] = {init_velocity:new b2Vec2(0,0), init_x:20, init_y:11.4, objects:[{objtype:"circle", radius:1, mass:10, x:20, y:10}, 
+levels[4] = {init_velocity:new b2Vec2(0,0), init_x:20, init_y:11.4, objects:[{objtype:"circle", radius:1, mass:20, x:20, y:10}, 
  {objtype:"circle", radius:1, mass:70, x:10, y:10},
- {objtype:"goal", radius:1, mass:0, x:25, y:10}] };
+ {objtype:"goal", radius:1, mass:0, x:23, y:10}] };
 
