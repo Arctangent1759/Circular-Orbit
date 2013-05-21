@@ -109,8 +109,8 @@ function init() {
    document.addEventListener("mouseup", function(e) {
      if (isTitleScreen){
         isTitleScreen=false;
-        createWorld(levels[currlevel]);
-        //createWorld(levels[4]);
+        //createWorld(levels[currlevel]);
+        createWorld(levels[4]);
         //uncomment above line to debug a specific level
      }
       if (e.clientX>10 && e.clientX<210 && e.clientY >GAMEHEIGHT-50 && e.clientY < GAMEHEIGHT-10){
@@ -270,10 +270,12 @@ function init() {
      for (var i = 0; i < objects.length; i++){
        if (objects[i].objtype=="circle" || objects[i].objtype=="goal"){
          fixDef.shape = new b2CircleShape(objects[i].radius);
-       }else if (objects[i].objtype=="wall"){
+       }else if (objects[i].objtype=="wall")
+         fixDef.restitution = 1{
          fixDef.shape = new b2PolygonShape;
          fixDef.shape.SetAsBox(objects[i].length,.1);
        }
+       fixDef.restitution = .8;
        bodyDef.position.x = objects[i].x;
        bodyDef.position.y = objects[i].y;
        world.CreateBody(bodyDef).CreateFixture(fixDef);
